@@ -1,0 +1,25 @@
+version: "3.2"
+services:
+  dcp_finder:
+    networks:
+      net:
+        ipv4_address: 172.16.238.10
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.finder
+    mac_address: 8a:ca:58:b9:e9:51
+  dcp_setter:
+    networks:
+      net:
+        ipv4_address: 172.16.238.12
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.setter
+    mac_address: 8a:ca:58:b9:e9:53
+    
+networks:
+  net:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.16.238.0/24"
