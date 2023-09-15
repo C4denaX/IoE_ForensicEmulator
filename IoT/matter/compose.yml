@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  # python-matter-server
+  matter-server:
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    image: matter-server:latest
+    container_name: matter-server
+    restart: unless-stopped
+    # Required for mDNS to work correctly
+    network_mode: host
+    security_opt:
+      # Needed for Bluetooth via dbus
+      - apparmor:unconfined
+    volumes:
+      # Create an .env file that sets the USERDIR environment variable.
+      - ${USERDIR:-$HOME}/docker/matter-server/data:/data/
+      - /run/dbus:/run/dbus:ro
