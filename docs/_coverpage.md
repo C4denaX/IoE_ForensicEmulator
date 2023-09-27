@@ -1,24 +1,21 @@
 <h1 id="cover-heading">
-  Forensic Emulator  <!-- TODO: Update title -->
+  Forensic (Industrial) Internet of Things Emulator  <!-- TODO: Update title -->
 </h1>
 
-[![GitHub tags](https://img.shields.io/github/tag/C4denaX/docsifyjs-template.svg)](https://GitHub.com/C4denaX/docsifyjs-template/tags/) <!-- TODO: Update username and repo name -->
-
->  Starter template for a Markdown-based docs site <!-- TODO: Replace with your description -->
+>  Exploring Cybersecurity and Forensic Capabilities in Industrial IoT Environments <!-- TODO: Replace with your description -->
 
 
 <!-- TODO: Update to match your project's benefits/features. Git emojis work great here. -->
 
-- :hourglass_flowing_sand: Quickly set up an elegant, responsive site
-- :open_file_folder: Use your markdown docs as content
-- :sparkles: No compilation step and no templating syntax to learn
-- :nut_and_bolt: Built on [DocsifyJS](https://docsify.js.org/)
-- :pushpin: The library loads in the browser - no local dependencies
-- :cloud: Serve locally and on GitHub Pages or Netlify
+- :hourglass_flowing_sand: Quickly set up diffent (I)IoT networks.
+- :open_file_folder: Pre-made various tools to perform cyberattacks in the networks and elaborate forensics researches.
+- :nut_and_bolt: Build your own scenarios easily
+- :pushpin: Firmware emulation is also supported to perform digital forensics proccesses
+- :cloud: Compatible with other emulators to provide of edge to the (I)IoT scenarios
 
 
-[Use this template](https://github.com/C4denaX/docsifyjs-template/generate) <!-- TODO: Remove on your copy of this template.-->
-[Get Started](#docsifyjs-template) <!-- TODO: Use ID of your homepage heading -->
+[Github Repository](https://github.com/C4denaX/IIoT_ForensicEmulator)
+[Get Started](#forensic-industrial-internet-of-things-emulator) <!-- TODO: Use ID of your homepage heading -->
 
 <!-- TODO: Set your background color or image. -->
-![color](#b3d9f8)
+![color](#f6deb9)
