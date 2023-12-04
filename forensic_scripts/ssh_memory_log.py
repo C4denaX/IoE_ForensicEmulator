@@ -1,7 +1,7 @@
 import paramiko
 import nmap
 import sys
-
+import os
 def list_hosts(ips):
 	hosts = []
 	scan_ssh = nmap.PortScanner()
