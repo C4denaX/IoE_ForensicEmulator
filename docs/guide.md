@@ -1,10 +1,10 @@
-# Forensic (Industrial) Internet of Things Emulator - Installation Guide
+# Forensic Internet of Everything Emulator - Installation Guide
 
-Welcome to the installation guide for the Forensic (Industrial) Internet of Things Emulator. This guide will walk you through the necessary steps to set up and use our powerful emulator.
+Welcome to the installation guide for the Forensic Internet of Everything Emulator. This guide will walk you through the necessary steps to set up and use our powerful emulator.
 
 ## Page Explanation
 
-This guide provides detailed instructions for setting up the Forensic (Industrial) Internet of Things Emulator on your Linux host. Please follow the steps carefully to ensure a smooth installation process.
+This guide provides detailed instructions for setting up the Forensic Internet of Everything on your Linux host. Please follow the steps carefully to ensure a smooth installation process.
 
 ## Prerequisites
 
@@ -90,5 +90,5 @@ Remember that these Python scripts are intended for the emulator use and should 
 
 ---
 
-*Explore, Test, and Secure IIoT Networks with Confidence.*
+*Explore, Test, and Secure IoE Networks with Confidence.*
 
