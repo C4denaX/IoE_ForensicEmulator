@@ -87,8 +87,34 @@ In addition to Docker containers, we provide Python scripts that can be deployed
 
 Remember that these Python scripts are intended for the emulator use and should be adapted to your unique situation. They provide a valuable tool for fine-tuning and testing our emulator funtionality.
 
+### Deploying Forensic Applications to your scenarios
 
----
+In order to use the forensic tools found in the forensic_scripts directory, there are two easy ways to do this:
+
+1. **Deploying an attacker node as a forensic node.**
+The attacker node called attacker_machine has the integration of the forensic tools for easy deployment and use by users. The problem with this solution is the storage of the file system data of the different affected devices in the scenario during an attack simulation and the capture of network traffic. Firstly due to the non-persistence of the Docker containers and secondly due to the saturation of the Docker container. To solve this, a Docker Volume must be used during the deployment of this node. To do this, the following commands must be entered:
+
+ ```bash
+     docker volume create forensic_data
+     docker run -it -v forensic_data:/data <attacker_node_image>
+ ```
+In this way we can add persistence to the data collected by the forensic container.
+
+2. **Using the Host Machine.**
+Another solution is to launch directly from the machine that is launching the network both Docker and Mininet, in this way we supply this need in both types of deployments. The only thing we need to do is to know the network that has been deployed when configuring the Docker-Compose configuration file or the Mininet deployment algorithm. Following this guide, the IP that should be used by the devices would be 172.17.0.0.0 for OT devices, 172.18.0.0.0 for IoT devices and 172.19.0.0 for IT application nodes. 
+
+In the case of network deployment using Mininet the user already knows which device is deployed on which IP. In the case of using Docker for deployment it would be interesting to use a scanning tool to find out. For this, I would recommend using nmap (or zmap in windows systems), its installation in Linux Systems is possible thanks to the following command:
+
+ ```bash
+     sudo apt install nmap
+ ```
+The usage of the tool is:
+
+ ```bash
+     nmap <subnet_to_scan>
+ ```
+
+Once we have detected where we want to apply our forensic scripts, all of them are configured to store the information in the directory from which the script is being launched.
 
 *Explore, Test, and Secure IoE Networks with Confidence.*
 
