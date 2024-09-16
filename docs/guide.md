@@ -70,6 +70,20 @@ We've included Dockerfiles for each protocol and application within their respec
     - Again, replace `your-tag` with the name you provided in step 2.
 
 This approach allows you to deploy only the protocols and applications you need, providing a highly modular and efficient way to work with our emulator. You can repeat these steps for any protocol or application you wish to deploy individually.
+### Deploy Scenario using Docker-Compose
+
+In order to facilitate the deployment of complex scenarios or scenarios with a large number of nodes, the use of docker-compose, through the use of docker-compose.yml is recommended. The repository has an example of such a file. To launch a scenario with docker-compose, use the following command:
+
+```bash
+    cd to/directory/with/docker-compose.yml
+    docker-compose up
+```
+### Deploy Scenario using Mininet
+It is an alternative to docker-compose and is much more suitable for devices that do not have a large amount of RAM. Mininet must be installed as described in this [guide](https://mininet.org/download/). Once installed, this option allows us to script the deployment of a network as shown in the `mininet_scenario.py` file which is a template to facilitate the creation of a test scenario or to be the starting point for others that users of the emulator may want. To deploy the scenario with Mininet, use the following command:
+
+```bash
+    python mininet_scenario.py
+```
 
 ### Python Scripts for Local Deployment
 
@@ -87,7 +101,7 @@ In addition to Docker containers, we provide Python scripts that can be deployed
 
 Remember that these Python scripts are intended for the emulator use and should be adapted to your unique situation. They provide a valuable tool for fine-tuning and testing our emulator funtionality.
 
-### Deploying Forensic Applications to your scenarios
+## Deploying Forensic Applications to your scenarios
 
 In order to use the forensic tools found in the forensic_scripts directory, there are two easy ways to do this:
 
