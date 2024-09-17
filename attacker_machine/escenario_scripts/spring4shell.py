@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
 Simple script to exploit spring4shell easily.
-Original exploit: @Rezn0k - Based off the work of p1n93r
 """
 import os
 import secrets
