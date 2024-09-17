@@ -2,50 +2,97 @@ version: "3.3"
 services:
   mqtt_client:
     build: IoT/mqtt/.
-  amqp_sender:
+    networks:
+      iot_network:
+        ipv4_address: 172.18.0.2
+  
+  matter_client:
     build:
-      context:  ./IoT/amqp
-      dockerfile: ./Dockerfile.send
-  amqp_reciever:
-    build:
-      context:  ./IoT/amqp
-      dockerfile: ./Dockerfile.recv
-  coap_client_get:
-    build:
-      context: ./IoT/coap
-      dockerfile: ./Dockerfile.get
-  coap_client_put:
-    build:
-      context: ./IoT/coap
-      dockerfile: ./Dockerfile.put
+      context: ./IoT/matter
+      dockerfile: ./Dockerfile.dev
+    networks:
+      iot_network:
+        ipv4_address: 172.18.0.6
+  
   modbus_client_reader:
     build: 
       context: ./OT/modbus
       dockerfile: ./Dockerfile.read
+    networks:
+      ot_network:
+        ipv4_address: 172.17.0.2
+  
   modbus_client_writer:
     build:
       context: ./OT/modbus
       dockerfile:  ./Dockerfile.write
+    networks:
+      ot_network:
+        ipv4_address: 172.17.0.3
+  
   opc_client:
     build: OT/OPC_CUA/.
+    networks:
+      ot_network:
+        ipv4_address: 172.17.0.4
+  
   s7_client_reader:
     build:
       context: ./OT/s7
       dockerfile: ./Dockerfile.read
+    networks:
+      ot_network:
+        ipv4_address: 172.17.0.5
+  
   s7_client_writer:
     build:
       context: ./OT/s7
       dockerfile:  ./Dockerfile.write
+    networks:
+      ot_network:
+        ipv4_address: 172.17.0.6
+  
   https_user:
     build: 
       context: ./IT/https
       dockerfile: ./Dockerfile.user
+    networks:
+      it_network:
+        ipv4_address: 172.19.0.2
+  
   streaming_user:
     build: 
       context: ./IT/Streaming
       dockerfile: ./Dockerfile.user
+    networks:
+      it_network:
+        ipv4_address: 172.19.0.3
+  
   attacker_machine:
     build: attacker_machine/.
+    networks:
+      ot_network:
+        ipv4_address: 172.17.0.7
+      iot_network:
+        ipv4_address: 172.18.0.7
+      it_network:
+        ipv4_address: 172.19.0.7
 
+networks:
+  ot_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.17.0.0/24
 
+  iot_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/24
 
+  it_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.19.0.0/24
