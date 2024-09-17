@@ -16,6 +16,6 @@
 
 [Github Repository](https://github.com/C4denaX/IoE_ForensicEmulator)
 [Get Started](#forensic-industrial-internet-of-things-emulator) <!-- TODO: Use ID of your homepage heading -->
-
+[Guide](https://github.com/C4denaX/IoE_ForensicEmulator/#/guide)
 <!-- TODO: Set your background color or image. -->
 ![color](#f6deb9)
