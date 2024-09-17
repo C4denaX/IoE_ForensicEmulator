@@ -147,6 +147,58 @@ sudo ./capture.sh eth0 capture.pcap parsed_output.txt
 1. The script requires **3 parameters** and root privileges to execute.
 2. Captures the network traffic on the specified interface using `tcpdump` and stores it in a `.pcap` file.
 3. Parses the `.pcap` file using `tshark` and saves the output in a human-readable format.
+
+#### 2. `log_stream.sh`
+
+The `log_stream.sh` script connects to a remote host via SSH and streams the content of a specified log file in real-time, saving the output to a local file.
+
+##### Usage:
+```bash
+./log_stream.sh <Remote_Host_IP> <Remote_File> <Local_File>
+```
+
+- `<Remote_Host_IP>`: The IP address of the remote host where the log file is located.
+- `<Remote_File>`: The path of the log file on the remote host.
+- `<Local_File>`: The path of the local file where the streamed log data will be saved.
+
+##### Example:
+```bash
+./log_stream.sh 192.168.1.10 /var/log/syslog ./local_syslog.txt
+```
+
+##### Script Logic:
+1. The script checks if exactly **3 parameters** are provided.
+2. Establishes an SSH connection to the remote host and uses the `tail -f` command to stream the log file in real-time.
+3. The output is redirected to a specified local file.
+
+
+#### 3. `ssh_memory_log.py`
+
+The `ssh_memory_log.py` script scans for hosts running SSH within a specified IP range, allows the user to connect to a selected host, and then performs a memory/log duplication by running commands remotely via SSH.
+
+##### Usage:
+```bash
+python3 ssh_memory_log.py <IP_range>
+```
+
+- `<IP_range>`: The IP range to scan for hosts with SSH open (e.g., `192.168.1.0/24`).
+
+##### Example:
+```bash
+python3 ssh_memory_log.py 192.168.1.0/24
+```
+
+##### Script Logic:
+1. Uses **nmap** to scan the specified IP range for hosts with SSH enabled.
+2. Lists available hosts and prompts the user to select one.
+3. Prompts for SSH credentials and connects to the selected host.
+4. Once connected, it runs the `df` command to list the available filesystems and prompts the user to select one for duplication.
+5. Duplicates the selected filesystem using `dd` and downloads the copied file to the local machine via SFTP.
+
+##### Important Notes:
+- The script requires SSH credentials for the target host.
+- The file duplication process involves using `sudo` privileges on the remote host, and the script will prompt for the password.
+
 ### Python Scripts for Local Deployment
 
 In addition to Docker containers, we provide Python scripts that can be deployed locally on your host machine. These scripts offer additional flexibility for customization and testing. Here's how to use them:
