@@ -78,6 +78,8 @@ Certainly! Here’s how you can access each node for both Docker-Compose and Min
 ## Scenario Deployment Methods
 To facilitate the usage of our emulator, we provide the following scenario to the users to be used as a template:
 
+![Figure](./IoE_case_page-0001.png "")
+
 The figure illustrates the structure of the IoE (Internet of Everything) network with three distinct topologies: OT (Operational Technology), IoT (Internet of Things), and IT (Information Technology). The OT topology (subnet 172.17.0.0/24) includes nodes for ICS (Industrial Control Systems) such as Modbus, OPC UA, and S7COMM nodes. The IoT topology (subnet 172.18.0.0/24) features MQTT nodes, Matter nodes, and external services. Finally, the IT topology (subnet 172.19.0.0/24) comprises HTTP clients. This segmented network structure supports specialized communication and control between different layers of the IoE system.
 
 ### Deploy Scenario using Docker-Compose
@@ -126,7 +128,11 @@ docker-compose down
 
 ### Deploy Scenario using Mininet
 
-Mininet is an alternative to `docker-compose` that is particularly useful for environments with limited RAM. It allows you to script and deploy network topologies efficiently. For instructions on installing Mininet, refer to this [guide](https://mininet.org/download/).
+Mininet is an alternative to `docker-compose` that is particularly useful for environments with limited RAM. It allows you to script and deploy network topologies efficiently. For instructions on installing Mininet, refer to this [guide](https://mininet.org/download/). It is also necessary to install all the dependencies of the services using the `requeriments.txt` file from the root of the project. To perform the installation, run the following command:
+
+```bash
+pip install -r requeriments.txt
+```
 
 The `mininet_scenario.py` script provided in this repository is a template for creating and deploying a test network scenario. Here’s a breakdown of what the script does:
 
