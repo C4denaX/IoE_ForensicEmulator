@@ -1,67 +1,63 @@
 import random
+import argparse
 from scapy.all import *
 import nmap
-target_IP_OPC = "10.0.0.3" #port 4840
-
-target_IP_Mod = "10.0.0.2" #port 502
-
-target_IP_s7 ="10.0.0.1" #port 102
+import ipaddress
 
 used_ips = []
 
-def get_random_ip():
+def get_random_ip(network):
     valid_ip = False
     while not valid_ip:
-        first_part = "172.18.0."
-        last_part = str(random.randint(1,254))
-        final_ip = first_part + last_part
+        last_part = str(random.randint(1, 254))
+        final_ip = f"{network}.{last_part}"
         if final_ip not in used_ips:
             used_ips.append(final_ip)
             valid_ip = True
     return final_ip
 
+def select_type_scan(scan_type):
+    scan_arguments = {
+        "1": "-sS",  # TCP SYN scan
+        "2": "-sT",  # TCP connect scan
+        "3": "-sU",  # UDP Scan
+        "4": "-sN",  # TCP NULL
+        "5": "-sF",  # TCP FIN
+        "6": "-sX",  # TCP XMAS
+        "7": "-sA"   # TCP ACK
+    }
+    return scan_arguments.get(scan_type, "-sS")
 
-def select_type_scan():
-    scan_agurment = {"1":"-sS","2":"-sT","3":"-sU","4":"-sN","5":"-sF","6":"-sX","7":"-sA"}
-    print("Select which kind of scan would you like to make:\n 1)TCP SYN scan\n2)TCP connect scan\n3)UDP Scan\n4)TCP NULL\n5)TCP FIN\n6)TCP XMAS\n7)TCP ACK")
-    return scan_agurment.get(input("Option: "))
-
-#Will make the scan of each machine with a specific ip (random generally) and with the first 10000 ports 
-def scan_network(ip,machines_ips):
+def scan_network(ip, network, scan_type, port_range):
     scan = nmap.PortScanner()
-    type_scan= select_type_scan()
     while True:
         try:
-            scan.scan(hosts=machines_ips,arguments="-p1-10000 {}".format(type_scan))
+            scan_arguments = f"-p{port_range} {select_type_scan(scan_type)}"
+            scan.scan(hosts=network, arguments=scan_arguments)
             print(scan.scanstats())
         except KeyboardInterrupt:
-            option = input("Would you like to finish(F) or Change type scan(C): ")
-            if option == "C" or option == "c":
-                type_scan= select_type_scan()
+            option = input("Would you like to finish (F) or change scan type (C): ")
+            if option.lower() == "c":
+                scan_type = input("Enter new scan type (1-7): ")
             else:
                 exit()
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Network Scanner Script")
+    parser.add_argument('--network', type=str, required=True, help="Network to scan (e.g., 192.168.1.0/24)")
+    parser.add_argument('--scan-type', type=str, default="1", help="Type of scan (1:TCP SYN, 2:TCP Connect, 3:UDP, 4:TCP NULL, 5:TCP FIN, 6:TCP XMAS, 7:TCP ACK)")
+    parser.add_argument('--port-range', type=str, default="1-10000", help="Range of ports to scan (default is 1-10000)")
+    parser.add_argument('--threads', type=int, default=1, help="Number of threads for scanning (not yet implemented)")
 
-#return IP's of the machines implicated to each case under study
-def get_machines_case(case):
-    case_gap = {"1":"1-3","2":"4-6","3":"7-8","4":"1-6","5":"1-8"}
-    gap = case_gap.get(case)
-    return "10.0.0." + gap
+    args = parser.parse_args()
 
+    # Validate network
+    try:
+        ip_network = ipaddress.ip_network(args.network, strict=False)
+    except ValueError as e:
+        print(f"Invalid network address: {e}")
+        exit(1)
 
+    src_ip = get_random_ip(ip_network.network_address)
 
-if __name__=="__main__":
-    print("Welcome to scanner app for Entorno Doc by Sergio")
-    protocols = input("Enter which case would like to activate? (1:OT, 2:IoT, 3:IT, 4:OT & IoT, 5:All): ")
-    
-
-    n_threads = 1
-    #n_threads = input("How many scanners would you like to deploy?: ") ##Peding to implement####
-
-    machines_to_scan = get_machines_case(protocols)
-
-    src_ip = get_random_ip()
-    scan_network(src_ip,machines_to_scan)
-
-
-   
+    scan_network(src_ip, args.network, args.scan_type, args.port_range)
