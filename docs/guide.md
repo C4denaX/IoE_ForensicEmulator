@@ -70,6 +70,9 @@ We've included Dockerfiles for each protocol and application within their respec
     - Again, replace `your-tag` with the name you provided in step 2.
 
 This approach allows you to deploy only the protocols and applications you need, providing a highly modular and efficient way to work with our emulator. You can repeat these steps for any protocol or application you wish to deploy individually.
+
+## Scenario Deployment methods
+
 ### Deploy Scenario using Docker-Compose
 
 In order to facilitate the deployment of complex scenarios or scenarios with a large number of nodes, the use of docker-compose, through the use of docker-compose.yml is recommended. The repository has an example of such a file. To launch a scenario with docker-compose, use the following command:
@@ -84,22 +87,6 @@ It is an alternative to docker-compose and is much more suitable for devices tha
 ```bash
     python mininet_scenario.py
 ```
-
-### Python Scripts for Local Deployment
-
-In addition to Docker containers, we provide Python scripts that can be deployed locally on your host machine. These scripts offer additional flexibility for customization and testing. Here's how to use them:
-
-1. **Navigate to the Corresponding Script:** Locate the Python script for the protocol or application you want to deploy. These scripts are available in the corresponding folder.
-
-2. **Adapt the Script:** Open the script in your preferred text editor and adapt it to your specific localhost. You may need to configure network settings, IP addresses, or other parameters to match your environment.
-
-3. **Run the Script:** Execute the Python script on your local host using Python 3. Replace `script.py` with the actual filename of the script you're using:
-
-    ```bash
-    python3 script.py
-    ```
-
-Remember that these Python scripts are intended for the emulator use and should be adapted to your unique situation. They provide a valuable tool for fine-tuning and testing our emulator funtionality.
 
 ## Deploying Forensic Applications to your scenarios
 
@@ -126,9 +113,55 @@ The usage of the tool is:
 
  ```bash
      nmap <subnet_to_scan>
- ```
-
+ ``` 
 Once we have detected where we want to apply our forensic scripts, all of them are configured to store the information in the directory from which the script is being launched.
+
+## Cybersecurity applications
+
+In this section we will detail the use of the tools available in the emulator for the execution of attacks and the start of different forensic processes in the same deployed devices. 
+
+### Cyberattack scripts usage
+
+### Forensic scripts usage
+This guide provides usage instructions and a brief explanation of each forensic script located in the `forensic_scripts` folder. These scripts are used for capturing network traffic, streaming logs, and accessing remote hosts for memory/log collection.
+
+#### 1. `capture.sh`
+
+The `capture.sh` script captures network traffic from a specified network interface and converts the raw packet data into a human-readable format using `tcpdump` and `tshark`.
+
+##### Usage:
+```bash
+sudo ./capture.sh <interface> <output_file.pcap> <parsed_output.txt>
+```
+
+- `<interface>`: The network interface to capture traffic from (e.g., `eth0`).
+- `<output_file.pcap>`: The file where the raw packet capture will be stored.
+- `<parsed_output.txt>`: The file where the parsed output will be saved in a readable format.
+
+##### Example:
+```bash
+sudo ./capture.sh eth0 capture.pcap parsed_output.txt
+```
+
+##### Script Logic:
+1. The script requires **3 parameters** and root privileges to execute.
+2. Captures the network traffic on the specified interface using `tcpdump` and stores it in a `.pcap` file.
+3. Parses the `.pcap` file using `tshark` and saves the output in a human-readable format.
+### Python Scripts for Local Deployment
+
+In addition to Docker containers, we provide Python scripts that can be deployed locally on your host machine. These scripts offer additional flexibility for customization and testing. Here's how to use them:
+
+1. **Navigate to the Corresponding Script:** Locate the Python script for the protocol or application you want to deploy. These scripts are available in the corresponding folder.
+
+2. **Adapt the Script:** Open the script in your preferred text editor and adapt it to your specific localhost. You may need to configure network settings, IP addresses, or other parameters to match your environment.
+
+3. **Run the Script:** Execute the Python script on your local host using Python 3. Replace `script.py` with the actual filename of the script you're using:
+
+    ```bash
+    python3 script.py
+    ```
+
+Remember that these Python scripts are intended for the emulator use and should be adapted to your unique situation. They provide a valuable tool for fine-tuning and testing our emulator funtionality.
 
 *Explore, Test, and Secure IoE Networks with Confidence.*
 
