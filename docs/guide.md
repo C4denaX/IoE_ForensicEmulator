@@ -777,6 +777,80 @@ To scan the network, execute:
 
 Once you identify the relevant IP addresses, you can apply your forensic scripts. These scripts are designed to save collected information to the directory from which they are executed.
 
+Here’s an updated explanation of how to deploy the firmware emulation with the necessary Docker commands and mention of Docker-Compose compatibility:
+
+---
+
+## Firmware Emulation
+
+To emulate firmware in this project, you need to modify the Dockerfile located in the `Firmware_Emulation` folder. The Dockerfile enables the deployment of firmware using a simple, pre-configured environment. You can select one of the provided firmware images from the `FW_Filesystem_Test` folder to emulate.
+
+### Steps to Deploy Firmware
+
+1. **Locate and Modify the Dockerfile**: The Dockerfile is found in the `Firmware_Emulation` folder. It is pre-configured to deploy a specific firmware image.
+   
+2. **Select a Firmware**: Inside the `FW_Filesystem_Test` folder, several firmware images are available, such as `DLINK/190.tar.gz`. To deploy a specific firmware, modify the `CMD` instruction in the Dockerfile to point to the desired firmware image.
+
+3. **Example Dockerfile**:
+   The Dockerfile used for firmware emulation is as follows:
+
+   ```dockerfile
+   FROM debian:bullseye
+
+   RUN apt update; apt upgrade -y; apt -y install net-tools python3 python3-pip busybox-static fakeroot e2tools file tar qemu qemu-system
+   RUN pip3 install pexpect requests
+
+   ADD ./Emulator ./Emulator
+
+   WORKDIR ./Emulator
+
+   CMD python3 main.py -p FW_Filesystem_Test/DLINK/190.tar.gz
+
+   EXPOSE 20080/tcp 20443/tcp
+   ```
+
+4. **Running the Emulation**: 
+   - The Dockerfile installs necessary tools such as QEMU, busybox, and other dependencies required for firmware emulation.
+   - The firmware image specified in the `CMD` line will be emulated when you build and run the Docker container.
+   - Modify the path in the `CMD` instruction to point to a different firmware if needed (e.g., `CMD python3 main.py -p FW_Filesystem_Test/YourFirmware.tar.gz`).
+
+5. **Commands to Launch the Container**:
+   To deploy and run the firmware emulation using Docker, follow these commands:
+
+   - **Build the Docker image**:
+   
+     ```bash
+     docker build -t firmware_emulator ./Firmware_Emulation
+     ```
+
+   - **Run the Docker container**:
+
+     ```bash
+     docker run -it -p 20080:20080 -p 20443:20443 firmware_emulator
+     ```
+
+   This command will build and run the firmware emulator, exposing the necessary ports (20080 and 20443) for communication.
+
+6. **Docker-Compose Compatibility**: 
+   The firmware emulation can also be integrated into a larger Docker-Compose deployment as it has been detailed above. Simply add the `firmware_emulator` service to your `docker-compose.yml` file, specifying the necessary build context and exposed ports, like so:
+
+   ```yaml
+   firmware_emulator:
+     build: ./Firmware_Emulation
+     ports:
+       - "20080:20080"
+       - "20443:20443"
+   ```
+
+   Then, you can launch the entire scenario along with the firmware emulation using Docker-Compose:
+
+   ```bash
+   docker-compose up
+   ```
+
+By following this setup, you can easily deploy and test firmware images using the custom emulation environment configured in Docker. This approach is compatible with both standalone Docker and Docker-Compose deployments.
+
+
 
 *Explore, Test, and Secure IoE Networks with Confidence.*
 
